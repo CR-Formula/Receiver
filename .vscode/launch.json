@@ -1,0 +1,17 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "Cortex Debug",
+            "cwd": "${workspaceFolder}",
+            "preLaunchCommands": ["make -j8"],
+            "executable": "./build/Lora_Receiver.elf",
+            "request": "launch",
+            "type": "cortex-debug",
+            "servertype": "stutil",
+            "device": "STM32F042",
+            "interface": "swd",
+            "svdFile": "${workspaceFolder}/STM32F0x2.svd",
+        }
+    ]
+}
