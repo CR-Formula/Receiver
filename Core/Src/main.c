@@ -5,3 +5,8 @@
 * 
 * @brief   Main Code to run the receiver
 ***********************************************/
+
+#include "stm32f042x6.h"
+
+void main() {
+}
