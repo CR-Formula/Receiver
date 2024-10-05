@@ -1,0 +1,32 @@
+#include "uart.h"
+
+void uart_init(){
+    RCC->APB2ENR |= RCC_APB2ENR_USART1EN;
+    RCC->AHBENR |= RCC_AHBENR_GPIOAEN;
+    USART1->CR1 &= ~USART_CR1_UE_Msk;
+
+    GPIOA->MODER &= ~GPIO_MODER_MODER10_Msk & ~GPIO_MODER_MODER2_Msk;
+    GPIOA->MODER |= (0x2 << GPIO_MODER_MODER10_Pos) | (0x2 << GPIO_MODER_MODER2_Pos);
+    GPIOA->OTYPER &= ~GPIO_OTYPER_OT_10 & ~GPIO_OTYPER_OT_2;
+    GPIOA->OSPEEDR &= ~GPIO_OSPEEDR_OSPEEDR10_Msk & ~GPIO_OSPEEDR_OSPEEDR2_Msk;
+    GPIOA->OSPEEDR |= (0x3 << GPIO_OSPEEDR_OSPEEDR10_Pos) | (0x3 << GPIO_OSPEEDR_OSPEEDR2_Pos);
+    GPIOA->PUPDR &= ~GPIO_PUPDR_PUPDR10_Msk & ~GPIO_PUPDR_PUPDR2_Msk;
+
+    USART1->CR1 &= ~USART_CR1_M1 & ~USART_CR1_M0;
+    USART1->CR2 &= ~USART_CR2_STOP_Msk;
+    USART1->CR1 &= ~USART_CR1_OVER8_Msk;
+    USART1->BRR = 0x1A1;
+
+    USART1->CR1 |= USART_CR1_UE;
+}
+
+void uart_send(uint8_t data){
+    USART1->CR1 |= USART_CR1_TE;
+    //while(!){
+
+   // }
+}
+
+void uart_receive(){
+    //USART1->CR1 |= USART_CR1_RE;
+}
