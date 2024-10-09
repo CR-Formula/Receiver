@@ -22,9 +22,7 @@ void uart_init(){
 
 void uart_send(uint8_t data){
     USART1->CR1 |= USART_CR1_TE;
-    //while(!){
-
-   // }
+    USART1->TDR = data;
 }
 
 void uart_receive(){
