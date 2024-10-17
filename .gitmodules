@@ -1,0 +1,3 @@
+[submodule "Drivers/STM32F04-Drivers"]
+	path = Drivers/STM32F04-Drivers
+	url = https://github.com/CR-Formula/STM32F04-Drivers.git
