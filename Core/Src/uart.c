@@ -28,6 +28,7 @@ void uart_send(uint8_t data){
 }
 
 void uart_receive(){
-    //USART2->CR3 |= (0x1 << );
     USART2->CR1 |= USART_CR1_RE;
+    
+    USART2->CR1 |= USART_CR1_RXNEIE;
 }
