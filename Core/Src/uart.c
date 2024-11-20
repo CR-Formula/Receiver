@@ -28,7 +28,12 @@ void uart_send(uint8_t data){
 }
 
 void uart_receive(){
+    uint8_t rxData = 0;
+
     USART2->CR1 |= USART_CR1_RE;
+
+    if(USART2->ISR & USART_ISR_RXNE){
+        rxData = USART2->RDR;
+    }
     
-    USART2->CR1 |= USART_CR1_RXNEIE;
 }
