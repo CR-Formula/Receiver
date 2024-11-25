@@ -9,6 +9,7 @@
 #include "SPI.h"
 
 void SPI1_Init() {
+    RCC ->AHBENR |= RCC_AHBENR_GPIOAEN;
     RCC ->AHB2ENR |= RCC_AHB2ENR_SPI1EN; //ENABLES CLOCK
 
     GPIOA ->MODER &= ~GPIO_MODER_MODER0 & ~GPIO_MODER_MODER1 &~GPOIO_MODER_MODER11 & ~GPIO_MODER_MODER12;
@@ -28,9 +29,9 @@ void SPI1_Init() {
     SPI1 ->CR1 |= SPI1_CR1_MSTR; 
     SPI1 ->CR1 &= ~SPI1_CR1_CPOL & ~SPI1_CR1_CPHA; //sets to mode 0
 
-    SPI1 ->CR2 &= ~SPI1_CR2_FRXTH; //sets to 16 bit data frame
+    SPI1 ->CR2 |= SPI1_CR2_FRXTH; //sets to 8 bit
     SPI1 ->CR2 &= ~SPI1_CR2_DS;
-    SPI1 ->CR2 |= (0XF << SPI1_CR2_DS_Pos); //sets data size to 16 bits
+    SPI1 ->CR2 |= (0X7 << SPI1_CR2_DS_Pos); //sets data size to 8 bits
     SPI1 ->CR2 &= ~SPI1_CR2_TXEIE;
     SPI1 ->CR2 &= ~SPI1_CR2_RXNEIE;
     SPI1 ->CR2 &= ~SPI1_CR2_ERRIE;
@@ -43,10 +44,15 @@ void SPI1_Init() {
 }
 
 void SPI1_Transmit(uint8_t data) {
-
+    while (!(SPI1->SR & SPI_SR_TXE));
+    SPI1->DR = data;  
+    while (!(SPI1->SR & SPI_SR_TXE)); 
+    while (SPI1->SR & SPI_SR_BSY);
 
 }
 
-void SPI1_Recieve(){
-    
+int SPI1_Recieve(){ 
+    SPI1->SR &= ~SPI_SR_RXNE; 
+    (!(SPI1->SR & SPI_SR_RXNE));  
+    return SPI1->DR; 
 }
