@@ -7,6 +7,11 @@
 ***********************************************/
 
 #include "stm32f042x6.h"
+#include "SPI.h"
 
 void main() {
+    SPI_Init();
+    while(1) {
+        SPI_Transmit('A');
+    }
 }

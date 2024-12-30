@@ -10,37 +10,38 @@
 
 void SPI1_Init() {
     RCC ->AHBENR |= RCC_AHBENR_GPIOAEN;
-    RCC ->AHB2ENR |= RCC_AHB2ENR_SPI1EN; //ENABLES CLOCK
+    RCC ->AHBENR |= RCC_APB2ENR_SPI1EN; //ENABLES CLOCK
 
-    GPIOA ->MODER &= ~GPIO_MODER_MODER0 & ~GPIO_MODER_MODER1 &~GPOIO_MODER_MODER11 & ~GPIO_MODER_MODER12;
-    GPIOA ->MODER |= (0x2 << GPIO_MODER_MODER0_Pos) | (0x2 << GPIO_MODER_MODER1_Pos) | (0x2 << GPIO_MODER_MODER11_Pos) | (0x2 << GPIO_MODER_MODER12_Pos);
+    GPIOA ->MODER &= ~GPIO_MODER_MODER0 & ~GPIO_MODER_MODER1 & ~GPIO_MODER_MODER11 & ~GPIO_MODER_MODER12;
+    GPIOA ->MODER |= (0x2 << GPIO_MODER_MODER4_Pos) | (0x2 << GPIO_MODER_MODER5_Pos) | (0x2 << GPIO_MODER_MODER6_Pos) | (0x2 << GPIO_MODER_MODER7_Pos);
     //Below sets gpio pins to alternative function 5
-    GPIOA ->AFRH[1] &= ~GPIO_AFRH_AFSEL11 &~ GPIO_AFRH_AFSEL12;
-    GPIOA ->AFRH[1] |= (0X5 << GPIO_AFRH_AFSEL11_Pos) | (0X5 << GPIO_AFRH_ASFSER12_Pos);
-    GPIOA ->AFRL[0] &= ~GPIO_AFRL_AFSEL1 & ~GPIO_AFRL_AFSEL0;
-    GPIOA ->AFRL[0] |= (0X5 << GPIO_AFRL_AFSEL1_Pos) | (0X5 << GPIO_AFRL_AFSEL0_Pos);
+    //GPIOA ->AFR[1] &= ~GPIO_AFRH_AFSEL4 & ~GPIO_AFRH_AFSEL5 & ~GPIO_AFRH_AFSEL6 & ~GPIO_AFRH_AFSEL7;
+    //GPIOA ->AFR[1] |= (0x0 << GPIO_AFRH_AFSEL4_Pos) | (0x0 << GPIO_AFRH_AFSEL5_Pos) | (0x0 << GPIO_AFRH_AFSEL6_Pos) | (0x0 << GPIO_AFRH_AFSEL7_Pos);
+    GPIOA ->AFR[0] &= ~GPIO_AFRL_AFSEL1 & ~GPIO_AFRL_AFSEL0;
+    GPIOA ->AFR[0] |= (0x0 << GPIO_AFRL_AFSEL1_Pos) | (0x0 << GPIO_AFRL_AFSEL0_Pos);
 
 
-    SPI1 ->CR1 &= ~SPI1_CR1_CRCEN;
-    SPI1 ->CR1 &= ~SPI1_CR1_RXONLY;
-    SPI1 ->CR1 &= ~SPI1_CR1_LSBFIRST;  
-    SPI1 ->CR1 &= ~SPI1_CR1_BR_Pos;
-    SPI1 ->CR1 |= (0X7 << SPI1_CR1_BR_Pos); //sets baud rate to fPCLK/256
-    SPI1 ->CR1 |= SPI1_CR1_MSTR; 
-    SPI1 ->CR1 &= ~SPI1_CR1_CPOL & ~SPI1_CR1_CPHA; //sets to mode 0
 
-    SPI1 ->CR2 |= SPI1_CR2_FRXTH; //sets to 8 bit
-    SPI1 ->CR2 &= ~SPI1_CR2_DS;
-    SPI1 ->CR2 |= (0X7 << SPI1_CR2_DS_Pos); //sets data size to 8 bits
-    SPI1 ->CR2 &= ~SPI1_CR2_TXEIE;
-    SPI1 ->CR2 &= ~SPI1_CR2_RXNEIE;
-    SPI1 ->CR2 &= ~SPI1_CR2_ERRIE;
-    SPI1 ->CR2 &= ~SPI1_CR2_FRF;
-    SPI1 ->CR2 &= ~SPI1_CR2_NSSP;
-    SPI1 ->CR2 &= ~SPI1_CR2_TXDMAEN;
-    SPI1 ->CR2 &= ~SPI1_CR2_RXDMAEN;
-    SPI1 ->CR2 |= SPI1_CR2_SSOE;
-    SPI1 ->CR1 |= SPI1_CR1_SPE; //Put at end of intialization function
+    SPI1 ->CR1 &= ~SPI_CR1_CRCEN;
+    SPI1 ->CR1 &= ~SPI_CR1_RXONLY;
+    SPI1 ->CR1 &= ~SPI_CR1_LSBFIRST;  
+    SPI1 ->CR1 &= ~SPI_CR1_BR_Pos;
+    SPI1 ->CR1 |= (0X7 << SPI_CR1_BR_Pos); //sets baud rate to fPCLK/256
+    SPI1 ->CR1 |= SPI_CR1_MSTR; 
+    SPI1 ->CR1 &= ~SPI_CR1_CPOL & ~SPI_CR1_CPHA; //sets to mode 0
+
+    SPI1 ->CR2 |= SPI_CR2_FRXTH; //sets to 8 bit
+    SPI1 ->CR2 &= ~SPI_CR2_DS;
+    SPI1 ->CR2 |= (0X7 << SPI_CR2_DS_Pos); //sets data size to 8 bits
+    SPI1 ->CR2 &= ~SPI_CR2_TXEIE;
+    SPI1 ->CR2 &= ~SPI_CR2_RXNEIE;
+    SPI1 ->CR2 &= ~SPI_CR2_ERRIE;
+    SPI1 ->CR2 &= ~SPI_CR2_FRF;
+    SPI1 ->CR2 &= ~SPI_CR2_NSSP;
+    SPI1 ->CR2 &= ~SPI_CR2_TXDMAEN;
+    SPI1 ->CR2 &= ~SPI_CR2_RXDMAEN;
+    SPI1 ->CR2 |= SPI_CR2_SSOE;
+    SPI1 ->CR1 |= SPI_CR1_SPE; //Put at end of intialization function
 }
 
 void SPI1_Transmit(uint8_t data) {
@@ -52,7 +53,6 @@ void SPI1_Transmit(uint8_t data) {
 }
 
 int SPI1_Recieve(){ 
-    SPI1->SR &= ~SPI_SR_RXNE; 
-    (!(SPI1->SR & SPI_SR_RXNE));  
+    while (!(SPI1->SR & SPI_SR_RXNE));  
     return SPI1->DR; 
 }
