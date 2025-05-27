@@ -1,12 +1,28 @@
 /************************************************
 * @file    main.c 
 * @author  APBashara
-* @date    9/2024
+* @date    5/2025
 * 
-* @brief   Main Code to run the receiver
+* @brief   Main Code to run Tasks and Setup Peripherals
 ***********************************************/
 
-#include "stm32f042x6.h"
+/* Includes -----------------------------------------------------------------*/
+#include "main.h"
 
-void main() {
+/* Function Implementation --------------------------------------------------*/
+
+int main(void) {
+
+  SystemClock_Config(); // Sets to 48MHz using HSI48
+  MX_USB_DEVICE_Init();
+
+  while (1) {
+    
+  }
+}
+
+void Error_Handler(void) {
+  __disable_irq();
+  while (1);
+
 }
