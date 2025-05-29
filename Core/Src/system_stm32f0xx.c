@@ -187,9 +187,6 @@ void SystemCoreClockUpdate (void)
     case RCC_CFGR_SWS_HSI:  /* HSI used as system clock */
       SystemCoreClock = HSI_VALUE;
       break;
-    case RCC_CFGR_SWS_HSI48:  /* HSI48 used as system clock */
-      SystemCoreClock = HSI48_VALUE;
-      break;
     case RCC_CFGR_SWS_HSE:  /* HSE used as system clock */
       SystemCoreClock = HSE_VALUE;
       break;

@@ -2,16 +2,52 @@
     "version": "0.2.0",
     "configurations": [
         {
-            "name": "Cortex Debug",
+            "name": "ST-Link Debug",
             "cwd": "${workspaceFolder}",
             "preLaunchCommands": ["make -j8"],
             "executable": "./build/Lora_Receiver.elf",
             "request": "launch",
             "type": "cortex-debug",
             "servertype": "stutil",
-            "device": "STM32F042",
+            "device": "STM32F042F6",
             "interface": "swd",
             "svdFile": "${workspaceFolder}/STM32F0x2.svd",
-        }
+        },
+        {
+            "name": "ST-Link Attach",
+            "cwd": "${workspaceFolder}",
+            "executable": "./build/Lora_Receiver.elf",
+            "request": "attach",
+            "type": "cortex-debug",
+            "servertype": "stutil",
+            "device": "STM32F042F6",
+            "interface": "swd",
+            "svdFile": "${workspaceFolder}/STM32F0x2.svd",
+        },
+        {
+            "name": "J-Link Debug",
+            "cwd": "${workspaceFolder}",
+            "executable": "./build/Lora_Receiver.elf",
+            "request": "launch",
+            "type": "cortex-debug",
+            "servertype": "jlink",
+            "device": "STM32F042F6",
+            "interface": "swd",
+            "runToEntryPoint": "main",
+            "svdFile": "${workspaceFolder}/STM32F0x2.svd",
+            "preLaunchCommands": ["make -j8"]
+          },
+          {
+            "name": "J-Link Attach",
+            "cwd": "${workspaceFolder}",
+            "executable": "./build/Lora_Receiver.elf",
+            "request": "attach",
+            "type": "cortex-debug",
+            "servertype": "jlink",
+            "device": "STM32F042F6",
+            "interface": "swd",
+            "runToEntryPoint": "main",
+            "svdFile": "${workspaceFolder}/STM32F0x2.svd"
+          }
     ]
 }
