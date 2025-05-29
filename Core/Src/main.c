@@ -19,7 +19,6 @@ uint8_t usbBufLen;
 Telemetry telemetry;
 
 /* Function Implementation --------------------------------------------------*/
-
 int main(void) {
   HAL_Init(); // Used for USB
   SystemClock_Config(); // Sets to 48MHz using HSI48
@@ -27,6 +26,7 @@ int main(void) {
   MX_USB_DEVICE_Init();
 
   while (1) {
+
     if (packetRecv) {
       Toggle_Pin(LED_GPIO, LED_PIN); // Toggle the LED pin
       packetRecv = 0;
@@ -34,7 +34,7 @@ int main(void) {
       uint8_t LoRaPacketID = LoRaPacketBuf[0]; // Get the packet ID
 
       switch(LoRaPacketID) {
-        // Start at buffer index 1 to skip the ID byte
+        // Start at buffer index 1 to skip the ID byte and assign the packet data to the telemetry struct
         case LORA_SUSPENSION_ID: {
           telemetry.Suspension_Packet = *(LoRa_Suspension_Packet*)LoRaPacketBuf[1];
           break;
@@ -66,7 +66,7 @@ int main(void) {
           break;
       }
 
-      // Transmit CSV formated data
+      // Transmit CSV formated telemetry struct over USB
       usbBufLen = snprintf((char*)usbTxBuf, USB_BUF_LEN, "%d, %d, %d, %d, %d, %d, %d, %d, %d, %d, %d, %d, %d, %d, %d, %d, %d, %d, %d,\r\n",
         telemetry.Suspension_Packet.FrontPot, telemetry.Suspension_Packet.RearPot, telemetry.GPS_Packet.latGPS,
         telemetry.GPS_Packet.longGPS, telemetry.GPS_Packet.Speed, telemetry.Engine_Data_Packet.BrakePressure,
@@ -84,5 +84,4 @@ int main(void) {
 void Error_Handler(void) {
   __disable_irq();
   while (1);
-
 }
