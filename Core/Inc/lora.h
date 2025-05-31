@@ -5,8 +5,6 @@
 * 
 * @brief   Prototype Functions for RFM95W Device Driver
 ***********************************************/
-
-#include "stm32f415xx.h"
 #include "spi.h"
 #include "rfm95_reg.h"
 #ifndef GPIO_H
