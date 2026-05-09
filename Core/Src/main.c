@@ -8,6 +8,7 @@
 
 /* Includes -----------------------------------------------------------------*/
 #include "main.h"
+#include "math.h"
 
 /* Global Variables ---------------------------------------------------------*/
 uint8_t packetRecv;
@@ -16,8 +17,6 @@ uint8_t LoRaPacketLen;
 uint8_t usbTxBuf[USB_BUF_LEN];
 uint8_t usbBufLen;
 
-Telemetry telemetry;
-
 /* Function Implementation --------------------------------------------------*/
 int main(void) {
   HAL_Init(); // Used for USB
@@ -25,59 +24,23 @@ int main(void) {
   GPIO_Init();
   MX_USB_DEVICE_Init();
 
+  float angle = 0;
+  LoRa_GPS_Packet testPacket = {
+    .ID = LORA_GPS_ID,
+    .latGPS = 0,
+    .longGPS = 0,
+    .Speed = 0
+  };
+
   while (1) {
-
-    if (packetRecv) {
-      Toggle_Pin(LED_GPIO, LED_PIN); // Toggle the LED pin
-      packetRecv = 0;
-      // Lora_Receive(LoRaPacketBuf, &LoRaPacketLen); // Receive LoRa packet
-      uint8_t LoRaPacketID = LoRaPacketBuf[0]; // Get the packet ID
-
-      switch(LoRaPacketID) {
-        // Start at buffer index 1 to skip the ID byte and assign the packet data to the telemetry struct
-        case LORA_SUSPENSION_ID: {
-          telemetry.Suspension_Packet = *(LoRa_Suspension_Packet*)LoRaPacketBuf[1];
-          break;
-        }
-
-        case LORA_GPS_ID: {
-          LoRa_GPS_Packet* gpsPacket = (LoRa_GPS_Packet*)LoRaPacketBuf[1];
-          break;
-        }
-
-        case LORA_ENGINE_ID: {
-          LoRa_Engine_Data_Packet* enginePacket = (LoRa_Engine_Data_Packet*)LoRaPacketBuf[1];
-          break;
-        }
-
-        case LORA_BRAKES_ACCEL_ID: {
-          LoRa_Brakes_Accel_Packet* brakesAccelPacket = (LoRa_Brakes_Accel_Packet*)LoRaPacketBuf[1];
-          break;
-        }
-
-        case LORA_TEMPERATURE_ID: {
-          LoRa_Temperature_Packet* tempPacket = (LoRa_Temperature_Packet*)LoRaPacketBuf[1];
-          break;
-        }
-
-        default:
-          usbBufLen = snprintf((char*)usbTxBuf, USB_BUF_LEN, "Error: Unknown Packet ID %02X\r\n", LoRaPacketID);
-          CDC_Transmit_FS(usbTxBuf, usbBufLen);
-          break;
-      }
-
-      // Transmit CSV formated telemetry struct over USB
-      usbBufLen = snprintf((char*)usbTxBuf, USB_BUF_LEN, "%d, %d, %d, %d, %d, %d, %d, %d, %d, %d, %d, %d, %d, %d, %d, %d, %d, %d, %d,\r\n",
-        telemetry.Suspension_Packet.FrontPot, telemetry.Suspension_Packet.RearPot, telemetry.GPS_Packet.latGPS,
-        telemetry.GPS_Packet.longGPS, telemetry.GPS_Packet.Speed, telemetry.Engine_Data_Packet.BrakePressure,
-        telemetry.Engine_Data_Packet.ThrottleADC, telemetry.Engine_Data_Packet.Steering, telemetry.Engine_Data_Packet.RPM,
-        telemetry.Engine_Data_Packet.ThrottlePosSensor, telemetry.Engine_Data_Packet.Lambda,
-        telemetry.Brakes_Accel_Packet.OilPressure, telemetry.Brakes_Accel_Packet.FrontBrakeTemp,
-        telemetry.Brakes_Accel_Packet.RearBrakeTemp, telemetry.Brakes_Accel_Packet.AccelX, telemetry.Brakes_Accel_Packet.AccelZ,
-        telemetry.Brakes_Accel_Packet.AccelY, telemetry.Temperature_Packet.AirTemp, telemetry.Temperature_Packet.CoolTemp
-      );
-      CDC_Transmit_FS(usbTxBuf, usbBufLen); // Transmit over USB CDC
-    }
+    // Sample data
+    angle += 0.1;
+    testPacket.latGPS = (cos(angle) + 3 * sin(angle/5)) * 100000000;
+    testPacket.longGPS = (sin(angle/3) + 3 * sin(angle/4)) * 100000000;
+    
+    HAL_Delay(100);
+    Toggle_Pin(LED_GPIO, LED_PIN); // Toggle the LED pin
+    CDC_Transmit_FS(&testPacket, sizeof(testPacket));
   }
 }
 
